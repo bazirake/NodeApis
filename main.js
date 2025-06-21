@@ -14,7 +14,8 @@ const conn=new Client({
   database:process.env.DATABASE,
   ssl:{
        rejectUnauthorized: false // Accept self-signed certs (ok for Render)
-  }
+  },
+   idleTimeoutMillis: 30000, // optional
 });
 
 conn.connect().then(()=> console.log("connection succeeds")).catch((err)=>console.log(err));
