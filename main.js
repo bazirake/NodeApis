@@ -57,6 +57,10 @@ app.get("/category",(req,res)=>{
  })
 })
 
+app.get("/getda",(req,res)=>{
+ res.send("hello data API");
+})
+
 app.get("/course-content",(req,res)=>{
    const coursecontent= 'SELECT title, subtitle, content, subcontent, id, cid FROM public.course';
    conn.query(coursecontent,(err,result)=>{
