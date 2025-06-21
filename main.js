@@ -90,7 +90,7 @@ app.get("/course-content/:id",(req,res)=>{
 });
 
  app.get("/",(req,res)=>{
-     res.send("Node js api Serverrrrrrrr");
+     res.send("Node js api Serv");
  });
 
 //  app.listen(process.env.PORT || 3000,()=>{
