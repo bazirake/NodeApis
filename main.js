@@ -85,7 +85,7 @@ app.get("/course-content/:id",(req,res)=>{
 });
 
  app.get("/",(req,res)=>{
-     res.send("Node js api Server");
+     res.send("Node js api Serverrrrrrrr");
  });
 
  app.listen(3000,()=>{
