@@ -39,6 +39,44 @@ app.get("/user",(req,res)=>{
     });
 });
 
+app.get("/category",(req,res)=>{
+
+const category='SELECT name, id FROM public.category';
+conn.query(category,(err,result)=>{
+ if(err){
+    res.send("error"+err);
+ } else{
+    res.send(result.rows);
+ }
+
+});
+
+});
+
+app.get("/content",(req,res)=>{
+
+const content='SELECT title, subtitle, content, subcontent, id, cid FROM public.course';
+conn.query(content,(err,result)=>{
+ if(err){
+    res.send("error"+err);
+ } else{
+    res.send(result.rows);
+ }
+});
+});
+
+app.get("/content/:id",(req,res)=>{
+ const id=req.params.id;
+ const content='SELECT title, subtitle, content, subcontent, id, cid FROM public.course where cid=$1';
+ conn.query(content,[id],(err,result)=>{
+    if (err) {
+        res.send("err"+err);
+    } else{
+         res.send(result.rows)
+    }
+})
+});
+
 const PORT=runningp;
  app.listen(PORT,()=>{
     console.log(`server is running http://localhost:${PORT}`);
