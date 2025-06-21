@@ -32,6 +32,11 @@ app.post("/create-user",(req,res)=>{
     })
 });
 
+const PORT=process.env.PORT|3000;
+ app.listen(PORT,()=>{
+    console.log(`server is running http://localhost:${PORT}`);
+});
+
    app.post("/create-course",(req,res)=>{
     const {title,subtitle,content,subcontent,cid}=req.body;
    
@@ -91,10 +96,7 @@ app.get("/course-content/:id",(req,res)=>{
 //  app.listen(process.env.PORT || 3000,()=>{
 //      console.log("Server is running");
 // });
-const PORT=process.env.PORT|3000;
- app.listen(PORT,()=>{
-    console.log(`server is running http://localhost:${PORT}`);
-});
+
 
 
 
