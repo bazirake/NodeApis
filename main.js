@@ -50,7 +50,7 @@ conn.query(category,(err,result)=>{
 });
 
 app.get("/content",(req,res)=>{
-const content='SELECT title, subtitle, content, subcontent, id, cid FROM public.course';
+const content='SELECT title, subtitle,content,subcontent, id, cid FROM public.course';
 conn.query(content,(err,result)=>{
  if(err){
     res.send("error"+err);
@@ -80,7 +80,7 @@ app.get("/content/:id",(req,res)=>{
    } else {
     res.send({message:"Course applied successfully"});
    }
-  });
+  }); 
 });
 
 app.get("/student-course",(req,res)=>{
@@ -101,7 +101,7 @@ app.post("/contact",(req,res)=>{
   if (err){
     res.send({"errormessage":err})
   } else{
-    res.send({"message":"message has been sent"})
+    res.send({message:"message has been sent"})
   }
  })
 });
