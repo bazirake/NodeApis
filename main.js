@@ -1,19 +1,18 @@
 
 const express=require("express");
 const getConnection = require("./db_config");
+const cors=require('cors');
 const app=express();
 //JSON parser middleware
 app.use(express.json());
 const runningp=3000;
-
+app.use(cors())//Allow all origins (for development)
  app.get("/",(req,res)=>{
      res.send("Node js api Serv");
  });
 
 const conn=getConnection();
-
 conn.connect().then(()=>console.log("connected:")).catch((err)=>console.log(err));
- 
 app.post("/create-user",(req,res)=>{
     const{name,id}=req.body;
     const userss='INSERT INTO public.user (name,id) values($1,$2)';
@@ -27,8 +26,6 @@ app.post("/create-user",(req,res)=>{
     })
 });
 
-
-
 app.get("/user",(req,res)=>{
     const results='SELECT name,id FROM public.user';
     conn.query(results,(err,result)=>{
@@ -41,7 +38,6 @@ app.get("/user",(req,res)=>{
 });
 
 app.get("/category",(req,res)=>{
-
 const category='SELECT name, id FROM public.category';
 conn.query(category,(err,result)=>{
  if(err){
@@ -49,13 +45,11 @@ conn.query(category,(err,result)=>{
  } else{
     res.send(result.rows);
  }
-
 });
 
 });
 
 app.get("/content",(req,res)=>{
-
 const content='SELECT title, subtitle, content, subcontent, id, cid FROM public.course';
 conn.query(content,(err,result)=>{
  if(err){
@@ -83,7 +77,6 @@ app.get("/content/:id",(req,res)=>{
   conn.query(student,[fname,email,tel,country,terms,cid,conid],(err,result)=>{
    if (err) {
     res.send(err);
-    
    } else {
     res.send({message:"Course applied successfully"});
    }
@@ -95,7 +88,6 @@ app.get("/student-course",(req,res)=>{
     conn.query(stcourse,(err,result)=>{
       if (err) {
         res.send({"errorm":err});
-        
       } else {
         res.send(result.rows);
       }
@@ -108,7 +100,7 @@ app.post("/contact",(req,res)=>{
  conn.query(contact,[name,email,subjects,message],(err,result)=>{
   if (err){
     res.send({"errormessage":err})
-  } else {
+  } else{
     res.send({"message":"message has been sent"})
   }
  })
@@ -122,9 +114,9 @@ app.get("/get-contact",(req,res)=>{
        } else {
         res.send(result.rows);
        }
-
     });
 });
+
 const PORT=runningp;
  app.listen(PORT,()=>{
     console.log(`server is running http://localhost:${PORT}`);
