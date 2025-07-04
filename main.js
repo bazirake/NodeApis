@@ -118,9 +118,11 @@ app.get("/get-contact",(req,res)=>{
 });
 
  app.post("/iptracker",(req,res)=>{
-  const{ip,page,country,timest}=req.body;
-  const qweryx='INSERT INTO public.iptracker(ip,page,country,timest)VALUES($1,$2,$3,$4)';
-  conn.query(qweryx,[ip,page,country,timest],(err,result)=>{
+  const{ip,page,country,timest,city,region,org,timezone, network,latitude,
+    longitude,languages,currency_name,country_capital}=req.body;
+  const qweryx='INSERT INTO public.iptracker(ip,page,country,timest,city,region,org,timezone, network,latitude,longitude,languages,currency_name,country_capital)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)'
+  conn.query(qweryx,[ip,page,country,timest,city,region,org,timezone, network,latitude,
+    longitude,languages,currency_name,country_capital],(err,result)=>{
      if(err){
        res.send({errorm:err}); 
      }else{
