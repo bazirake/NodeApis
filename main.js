@@ -131,6 +131,21 @@ app.get("/get-contact",(req,res)=>{
   });
  });
 
+ app.get("/getTracker",(req,res)=>{
+   
+    const qwery='SELECT * FROM public.iptracker';
+    conn.query(qwery,(err,result)=>{
+  if (err) {
+    res.send({messageerr:err});
+  } else {
+    
+    res.send(result.rows);
+  }
+
+    });
+
+ });
+
  const PORT=runningp;
    app.listen(PORT,()=>{
        console.log(`server is running http://localhost:${PORT}`);
