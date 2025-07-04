@@ -1,6 +1,6 @@
 
 const express=require("express");
-const getConnection = require("./db_config");
+const getConnection=require("./db_config");
 const cors=require('cors');
 const app=express();
 //JSON parser middleware
@@ -117,10 +117,22 @@ app.get("/get-contact",(req,res)=>{
     });
 });
 
-const PORT=runningp;
- app.listen(PORT,()=>{
-    console.log(`server is running http://localhost:${PORT}`);
-});
+ app.post("/iptracker",(req,res)=>{
+  const{ip,page,country,timest}=req.body;
+  const qweryx='INSERT INTO public.iptracker(ip,page,country,timest)VALUES($1,$2,$3,$4)';
+  conn.query(qweryx,[ip,page,country,timest],(err,result)=>{
+     if(err){
+       res.send({errorm:err}); 
+     }else{
+      res.send({message:'ip tracker have been recorded successully'});
+     }
+  });
+ });
+
+ const PORT=runningp;
+   app.listen(PORT,()=>{
+       console.log(`server is running http://localhost:${PORT}`);
+ });
 
 
 
