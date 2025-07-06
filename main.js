@@ -62,7 +62,7 @@ conn.query(content,(err,result)=>{
 
 app.get("/content/:id",(req,res)=>{
  const id=req.params.id;
- const content='SELECT title, subtitle, content, subcontent, id, cid FROM public.course where cid=$1';
+ const content='SELECT title, subtitle, content, subcontent, id, cid,image FROM public.course where cid=$1';
  conn.query(content,[id],(err,result)=>{
     if (err) {
         res.send("err"+err);
@@ -139,7 +139,7 @@ app.get("/get-contact",(req,res)=>{
     res.send({messageerr:err});
   } else {
     
-    res.send(result.rows);
+    res.send(result.rows); 
   }
 
     });
