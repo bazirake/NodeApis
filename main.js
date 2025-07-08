@@ -5,9 +5,9 @@ const cors=require('cors');
 const app=express();
 //JSON parser middleware
 app.use(express.json());
-const runningp=3000;
+const runningp=5000;
 app.use(cors())//Allow all origins (for development)
- app.get("/",(req,res)=>{
+app.get("/",(req,res)=>{
      res.send("Node js api Serv");
  });
 
@@ -125,30 +125,38 @@ app.get("/get-contact",(req,res)=>{
     longitude,languages,currency_name,country_capital],(err,result)=>{
      if(err){
        res.send({errorm:err}); 
-     }else{
+      }else{
       res.send({message:'ip tracker have been recorded successully'});
-     }
+      }
+   });
   });
- });
-
  app.get("/getTracker",(req,res)=>{
-   
     const qwery='SELECT * FROM public.iptracker';
     conn.query(qwery,(err,result)=>{
   if (err) {
     res.send({messageerr:err});
   } else {
-    
     res.send(result.rows); 
   }
-
     });
+ });
 
+ app.get("/detail/:id/:cid",(req,res)=>{
+  const id=req.params.id;
+   const cid=req.params.cid;
+ const sqld='SELECT title,subtitle,content,subcontent,id,cid FROM public.course where id=$1 and cid=$2';
+ conn.query(sqld,[id,cid],(err,result)=>{
+    if(err){
+      res.send({errmess:err});
+    }else{
+      res.send(result.rows);
+    }
+ });
  });
 
  const PORT=runningp;
    app.listen(PORT,()=>{
-       console.log(`server is running http://localhost:${PORT}`);
+    console.log(`server is running http://localhost:${PORT}`);
  });
 
 
