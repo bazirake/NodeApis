@@ -95,6 +95,25 @@ app.get("/content/:id",(req,res)=>{
    });
   });
 
+  app.post("/Login",(req,res)=>{
+    const { emails, passwords } = req.body;
+
+const query = 'SELECT emails, passwords FROM public."Courseapp" WHERE emails = $1 AND passwords = $2';
+
+conn.query(query, [emails, passwords], (err, result) => {
+  if (err) {
+    res.status(500).send({ error: "Database error", details: err });
+  } else {
+    if (result.rows.length > 0) {
+      res.send({ message: "Login successful" });
+    } else {
+      res.status(401).send({ message: "Invalid email or password" });
+    }
+  }
+});
+  });
+
+
 app.get("/student-course",(req,res)=>{
     const stcourse='SELECT id, fname, email, tel, country, terms, cid, conid FROM public.student';
     conn.query(stcourse,(err,result)=>{
