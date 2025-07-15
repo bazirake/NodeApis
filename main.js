@@ -80,8 +80,20 @@ app.get("/content/:id",(req,res)=>{
    } else {
     res.send({message:"Course applied successfully"});
    }
-  }); 
-});
+   }); 
+  });
+
+  app.post("/courseapp",(req,res)=>{
+    const {cateid,contid,usertype,fname,email,tel,country,password}=req.body;
+   const query='INSERT INTO public."Courseapp" (cateid, contid, usertype, fname, emails, tel, country, passwords) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)';
+   conn.query(query,[cateid,contid,usertype,fname,email,tel,country,password],(err,result)=>{
+     if(err){
+      res.send(err);
+     } else {
+      res.send({message:"Course applied successfully"});
+     }
+   });
+  });
 
 app.get("/student-course",(req,res)=>{
     const stcourse='SELECT id, fname, email, tel, country, terms, cid, conid FROM public.student';
