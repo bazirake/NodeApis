@@ -106,7 +106,7 @@ conn.query(query,[emails,passwords],(err,result)=>{
     if (result.rows.length > 0) {
       res.send({message:"Login successful"});
     } else{
-      res.status(401).send({ message:"Invalid email or password"});
+      res.status(401).send({ message:"email or password does not match"});
     }
   }
 });
