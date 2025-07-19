@@ -1,10 +1,14 @@
 
 const express=require("express");
 const getConnection=require("./db_config");
+require("dotenv").config();
 const cors=require('cors');
 const app=express();
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 //JSON parser middleware
 app.use(express.json());
+app.use(cookieParser());  //to parse cookies
 const runningp=5000;
 app.use(cors())//Allow all origins (for development)
 app.get("/",(req,res)=>{
@@ -25,6 +29,50 @@ app.post("/create-user",(req,res)=>{
         }
     })
 });
+// Example route using JWT
+// app.post('/loginAuth', (req, res) => {
+//   const { emails, passwords } = req.body;
+
+//   const query = 'SELECT id, fname, emails FROM public."Courseapp" WHERE emails=$1 AND passwords=$2';
+//   conn.query(query, [emails, passwords], (err, result) => {
+//     if (err) {
+//       return res.status(500).json({ message:'Database error' });
+//     }
+
+//     if (result.rows.length === 0) {
+//       return res.status(401).json({message:'Invalid email or password' });
+//     }
+
+//     const user = result.rows[0];
+//     const token = jwt.sign(user, 'your_jwt_secret_key', { expiresIn: '1h' });
+//     res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict' }); // secure: true only for HTTPS
+//     res.json({ message: 'Logged in successfully', user });
+//   });
+// });
+
+ app.post("/LoginAuth",(req,res)=>{
+   const passwords=req.body.passwords;
+   const emails=req.body.emails;
+   const user={password:passwords,email:emails}
+   const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET)
+  res.json({accessToken:accessToken});
+ });
+
+  app.get('/protected', authenticationToken, (req, res) => {
+  res.json(req.user)
+});
+
+ function authenticationToken(req,res,next) {
+    //const authHeader=req.headers['authorization']
+    const  token =req.headers['authorization'].split(' ')[1];
+
+    if(token==null) return res.sendStatus(401)
+    jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
+    if(err) return res.sendStatus(403)
+    req.user=user
+    next();
+    });
+}
 
 app.get("/user",(req,res)=>{
     const results='SELECT name,id FROM public.user';
@@ -100,7 +148,7 @@ app.get("/content/:id",(req,res)=>{
 
 const query = 'SELECT emails, passwords FROM public."Courseapp" WHERE emails = $1 AND passwords = $2';
 conn.query(query,[emails,passwords],(err,result)=>{
-  if (err) {
+  if (err){
     res.status(500).send({message:"Database error",message:err});
   } else {
     if (result.rows.length > 0) {

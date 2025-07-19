@@ -1,0 +1,21 @@
+
+
+
+GET http://localhost:5000/protected
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IjEyMzQ1NiIsImVtYWlsIjoiYmF6aXJha2VyaWMxQGdtYWlsLmNvbSIsImlhdCI6MTc1Mjk1ODA0NX0.HEXp2lvccjGRkrGPTYp-hFk5ieM0N2RLZjN35AEWtc8
+###
+
+
+POST http://localhost:5000/LoginAuth
+Content-Type: application/json
+
+{
+ "passwords":"123456",
+ "emails":"bazirakeric1@gmail.com"
+}
+
+
+
+
+
+
