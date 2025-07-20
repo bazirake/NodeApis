@@ -46,11 +46,20 @@ app.post('/loginAuthe', (req, res) => {
     const user = result.rows[0];
     const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'5min'});
     res.cookie('token',token,{httpOnly: true, secure: true, sameSite: 'Strict'}); // secure: true only for HTTPS
-    res.json({ message: 'Logged in successfully', user });
+    res.json({ message: 'Logged in successfully',user});
   });
 });
 
-app.get('/protected', (req, res) => {
+app.post('/logout', (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'Strict'
+  });
+  res.json({ message: 'Logged out successfully' });
+});
+
+app.get('/protected',(req,res) => {
   const token = req.cookies.token; // <--- This is how you access it
   if (!token) return res.sendStatus(401);
 
@@ -62,33 +71,33 @@ app.get('/protected', (req, res) => {
   });
 });
 
- app.post("/LoginAuth",(req,res)=>{ 
-   const passwords=req.body.passwords;
-   const emails=req.body.emails;
-   const user={password:passwords,email:emails}
-   const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,
-    {expiresIn:'30min'})
-  res.json({accessToken:accessToken});
- });
+//  app.post("/LoginAuth",(req,res)=>{ 
+//    const passwords=req.body.passwords;
+//    const emails=req.body.emails;
+//    const user={password:passwords,email:emails}
+//    const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,
+//     {expiresIn:'30min'})
+//   res.json({accessToken:accessToken});
+//  });
 
-  app.get('/protected', authenticationToken,(req,res) =>{
-   res.json(req.user)
-  });
+//   app.get('/protected', authenticationToken,(req,res) =>{
+//    res.json(req.user)
+//   });
 
 
 
- function authenticationToken(req,res,next) {
-    //const authHeader=req.headers['authorization']
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+//  function authenticationToken(req,res,next) {
+//     //const authHeader=req.headers['authorization']
+//     const authHeader = req.headers['authorization'];
+//     const token = authHeader && authHeader.split(' ')[1];
 
-    if(token==null) return res.sendStatus(401)//No token = unauthorized
-    jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
-    if(err) return res.sendStatus(403) //Invalid token
-    req.user=user
-    next();
-    });
-}
+//     if(token==null) return res.sendStatus(401)//No token = unauthorized
+//     jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
+//     if(err) return res.sendStatus(403) //Invalid token
+//     req.user=user
+//     next();
+//     });
+// }
 
 app.get("/user",(req,res)=>{
     const results='SELECT name,id FROM public.user';

@@ -10,8 +10,8 @@ POST https://exapi-gjsy.onrender.com/loginAuthe
 Content-Type: application/json
 
 {
- "passwords":"123",
- "emails":"eric.bazirake@abr.rw"
+  "passwords":"123",
+  "emails":"eric.bazirake@abr.rw"
 }
 ###
 
