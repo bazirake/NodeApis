@@ -24,8 +24,8 @@ app.post("/create-user",(req,res)=>{
         if(err){
             res.send(err)
         } else{
-            console.log(result);
-            res.send("posted data");
+           console.log(result);
+          res.send("posted data");
         }
     })
 });
@@ -33,8 +33,8 @@ app.post("/create-user",(req,res)=>{
 app.post('/loginAuthe', (req, res) => {
   const { emails, passwords } = req.body;
 
-  const query = 'SELECT id,fname, emails FROM public."Courseapp" WHERE emails=$1 AND passwords=$2';
-  conn.query(query, [emails, passwords], (err, result) => {
+  const query = 'SELECT id,fname, emails,usertype,country FROM public."Courseapp" WHERE emails=$1 AND passwords=$2';
+  conn.query(query,[emails, passwords],(err, result)=>{
     if(err){
        return res.status(500).json({message:'Database error'});
     }
@@ -189,7 +189,7 @@ app.get("/contentAuth/:id", (req, res) => {
       WHERE cid = $1
     `;
 
-    conn.query(contentQuery, [id], (err, result) => {
+    conn.query(contentQuery, [id],(err, result) =>{
       if (err) {
         console.error("Database error:", err);
         return res.status(500).send("Database error: " + err);
