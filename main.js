@@ -122,24 +122,50 @@ conn.query(category,(err,result)=>{
 
 });
 
-app.get("/content",(req,res)=>{
-  const token = req.cookies.token; // <--- This is how you access it
-  if (!token) return res.sendStatus(401);
+// app.get("/content",(req,res)=>{
+//   const token = req.cookies.token; // <--- This is how you access it
+//   if (!token) return res.sendStatus(401);
+
+//   // Verify token
+//   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+//     if (err) return res.sendStatus(403);
+    
+    
+//   const content='SELECT title, subtitle,content,subcontent, id, cid FROM public.course';
+//   conn.query(content,(err,result)=>{
+//    if(err){
+//     res.send("error"+err);
+//    } else{
+//      const resultss=result.rows;
+//      res.json({userinfo:user,resultss});
+//    }
+//   });
+//   });
+
+app.get("/content", (req, res) => {
+  const token = req.cookies.token; // Get token from HTTP-only cookie
+
+  if (!token) return res.sendStatus(401); // No token = Unauthorized
 
   // Verify token
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user=user;
-    
-const content='SELECT title, subtitle,content,subcontent, id, cid FROM public.course';
-conn.query(content,(err,result)=>{
- if(err){
-    res.send("error"+err);
- } else{
-  const resultss=result.rows;
-    res.json({userinfo:user,resultss});
- }
-});
+    if (err) return res.sendStatus(403); // Invalid/expired token = Forbidden
+
+    // SQL query to get course content
+    const content = 'SELECT title, subtitle, content, subcontent, id, cid FROM public.course';
+
+    conn.query(content, (err, result) => {
+      if (err) {
+        res.status(500).send("error: " + err); // Internal error
+      } else {
+        const resultss = result.rows;
+        res.json({
+          userinfo: user,      // user info from token
+          resultss: resultss   // course data from DB
+        });
+      }
+    });
+  });
 });
 
 app.get("/content/:id",(req,res)=>{
