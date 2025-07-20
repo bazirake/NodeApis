@@ -6,7 +6,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IjEyM
 ###
 
 
-POST http://localhost:5000/LoginAuth
+POST https://exapi-gjsy.onrender.com/loginAuthe
 Content-Type: application/json
 
 {

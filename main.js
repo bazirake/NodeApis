@@ -40,7 +40,7 @@ app.post('/loginAuthe', (req, res) => {
     }
 
     if (result.rows.length === 0) {
-      return res.status(401).json({message:'Invalid email or password'});
+      return res.status(401).json({message:'email or password is incorrect'});
     }
 
     const user = result.rows[0];
