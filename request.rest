@@ -18,6 +18,9 @@ Content-Type: application/json
 
 GET https://exapi-gjsy.onrender.com/protected
 
+###
+GET https://exapi-gjsy.onrender.com/content
+
 
 
 

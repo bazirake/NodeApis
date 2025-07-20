@@ -46,7 +46,7 @@ app.post('/loginAuthe', (req, res) => {
     const user = result.rows[0];
     const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'5min'});
     res.cookie('token',token,{httpOnly: true, secure: true, sameSite: 'Strict'}); // secure: true only for HTTPS
-    res.json({ message: 'Logged in successfully',user});
+    res.json({message:'Logged in successfully',user});
   });
 });
 
@@ -56,7 +56,7 @@ app.post('/logout', (req, res) => {
     secure: true,
     sameSite: 'Strict'
   });
-  res.json({ message: 'Logged out successfully' });
+  res.json({ message:'Logged out successfully'});
 });
 
 app.get('/protected',(req,res) => {
@@ -122,27 +122,20 @@ conn.query(category,(err,result)=>{
 
 });
 
-// app.get("/content",(req,res)=>{
-//   const token = req.cookies.token; // <--- This is how you access it
-//   if (!token) return res.sendStatus(401);
+app.get("/content",(req,res)=>{
+  
+  const content='SELECT title, subtitle,content,subcontent, id, cid FROM public.course';
+  conn.query(content,(err,result)=>{
+   if(err){
+    res.send("error"+err);
+   } else{
+     const resultss=result.rows;
+     res.send(resultss);
+   }
+  });
+  });
 
-//   // Verify token
-//   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-//     if (err) return res.sendStatus(403);
-    
-    
-//   const content='SELECT title, subtitle,content,subcontent, id, cid FROM public.course';
-//   conn.query(content,(err,result)=>{
-//    if(err){
-//     res.send("error"+err);
-//    } else{
-//      const resultss=result.rows;
-//      res.json({userinfo:user,resultss});
-//    }
-//   });
-//   });
-
-app.get("/content", (req, res) => {
+app.get("/contentAuth", (req, res) => {
   const token = req.cookies.token; // Get token from HTTP-only cookie
 
   if (!token) return res.sendStatus(401); // No token = Unauthorized
