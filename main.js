@@ -306,6 +306,21 @@ app.get("/get-contact",(req,res)=>{
     });
  });
 
+ app.get("/detail/:id/:cid",(req,res)=>{
+  const id=req.params.id;
+   const cid=req.params.cid;
+  
+ const sqld='SELECT title,subtitle,content,subcontent,id,cid FROM public.course where id=$1 and cid=$2';
+ conn.query(sqld,[id,cid],(err,result)=>{
+    if(err){
+      res.send({errmess:err});
+    }else{
+      res.send(result.rows);
+    }
+ });
+ });
+
+ 
  app.get("/detailAuth/:id/:cid",(req,res)=>{
   const id=req.params.id;
    const cid=req.params.cid;
@@ -330,7 +345,6 @@ app.get("/get-contact",(req,res)=>{
   }
 );
 
- 
 
  const PORT=runningp;
    app.listen(PORT,()=>{
