@@ -64,7 +64,7 @@ app.get('/protected',(req,res) => {
   if (!token) return res.sendStatus(401);
 
   // Verify token
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;
     res.send(user);
@@ -309,15 +309,28 @@ app.get("/get-contact",(req,res)=>{
  app.get("/detail/:id/:cid",(req,res)=>{
   const id=req.params.id;
    const cid=req.params.cid;
- const sqld='SELECT title,subtitle,content,subcontent,id,cid FROM public.course where id=$1 and cid=$2';
- conn.query(sqld,[id,cid],(err,result)=>{
+     const token = req.cookies.token; // Get token from HTTP-only cookie
+
+  if (!token) return res.sendStatus(401); // Unauthorized (No token)
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err, user) => {
+    if (err) return res.sendStatus(403); // Forbidden (Invalid/expired token)
+   const sqld='SELECT title,subtitle,content,subcontent,id,cid FROM public.course where id=$1 and cid=$2';
+   conn.query(sqld,[id,cid],(err,result)=>{
     if(err){
       res.send({errmess:err});
     }else{
-      res.send(result.rows);
+      res.json({
+        userinfo:user, // Decoded user from JWT
+        resultss:result.rows   // Matching course content
+      });
     }
  });
  });
+  }
+);
+
+ 
 
  const PORT=runningp;
    app.listen(PORT,()=>{
