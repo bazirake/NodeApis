@@ -123,12 +123,12 @@ conn.query(category,(err,result)=>{
 });
 
 app.get("/content",(req,res)=>{
-  
+
   const content='SELECT title, subtitle,content,subcontent, id, cid FROM public.course';
   conn.query(content,(err,result)=>{
    if(err){
     res.send("error"+err);
-   } else{
+    }else{
      const resultss=result.rows;
      res.send(resultss);
    }
@@ -165,13 +165,47 @@ app.get("/content/:id",(req,res)=>{
  const id=req.params.id;
  const content='SELECT title, subtitle, content, subcontent, id, cid,image FROM public.course where cid=$1';
  conn.query(content,[id],(err,result)=>{
-    if (err) {
+    if (err){
         res.send("err"+err);
     } else{
        res.send(result.rows)
     }
 })
 });
+
+
+app.get("/contentAuth/:id", (req, res) => {
+  const id = req.params.id;
+  const token = req.cookies.token; // Get token from HTTP-only cookie
+
+  if (!token) return res.sendStatus(401); // Unauthorized (No token)
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err, user) => {
+    if (err) return res.sendStatus(403); // Forbidden (Invalid/expired token)
+
+    const contentQuery = `
+      SELECT title, subtitle, content, subcontent, id, cid, image 
+      FROM public.course 
+      WHERE cid = $1
+    `;
+
+    conn.query(contentQuery, [id], (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).send("Database error: " + err);
+      }
+
+      res.json({
+        userinfo:user, // Decoded user from JWT
+        resultss:result.rows   // Matching course content
+      });
+    });
+  });
+});
+
+
+
+
  app.post("/student",(req,res)=>{
   const{fname,email,tel,country,terms,cid,conid}=req.body;
   const student='INSERT INTO public.student(fname,email,tel,country,terms,cid,conid) VALUES ($1,$2,$3,$4,$5,$6,$7)';
