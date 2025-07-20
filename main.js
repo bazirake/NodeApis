@@ -306,10 +306,10 @@ app.get("/get-contact",(req,res)=>{
     });
  });
 
- app.get("/detail/:id/:cid",(req,res)=>{
+ app.get("/detailAuth/:id/:cid",(req,res)=>{
   const id=req.params.id;
    const cid=req.params.cid;
-     const token = req.cookies.token; // Get token from HTTP-only cookie
+  const token = req.cookies.token; // Get token from HTTP-only cookie
 
   if (!token) return res.sendStatus(401); // Unauthorized (No token)
 
