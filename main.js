@@ -123,12 +123,21 @@ conn.query(category,(err,result)=>{
 });
 
 app.get("/content",(req,res)=>{
+  const token = req.cookies.token; // <--- This is how you access it
+  if (!token) return res.sendStatus(401);
+
+  // Verify token
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user=user;
+    
 const content='SELECT title, subtitle,content,subcontent, id, cid FROM public.course';
 conn.query(content,(err,result)=>{
  if(err){
     res.send("error"+err);
  } else{
-    res.send(result.rows);
+  const resultss=result.rows;
+    res.json({userinfo:user,resultss});
  }
 });
 });
