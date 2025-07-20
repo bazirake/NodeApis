@@ -58,7 +58,7 @@ app.get('/protected', (req, res) => {
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;
-    res.send(`Welcome, ${user.email}`);
+    res.send(user);
   });
 });
 
