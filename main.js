@@ -30,31 +30,32 @@ app.post("/create-user",(req,res)=>{
     })
 });
 // Example route using JWT
-// app.post('/loginAuth', (req, res) => {
-//   const { emails, passwords } = req.body;
+app.post('/loginAuthe', (req, res) => {
+  const { emails, passwords } = req.body;
 
-//   const query = 'SELECT id, fname, emails FROM public."Courseapp" WHERE emails=$1 AND passwords=$2';
-//   conn.query(query, [emails, passwords], (err, result) => {
-//     if (err) {
-//       return res.status(500).json({ message:'Database error' });
-//     }
+  const query = 'SELECT id, fname, emails FROM public."Courseapp" WHERE emails=$1 AND passwords=$2';
+  conn.query(query, [emails, passwords], (err, result) => {
+    if (err) {
+      return res.status(500).json({message:'Database error'});
+    }
 
-//     if (result.rows.length === 0) {
-//       return res.status(401).json({message:'Invalid email or password' });
-//     }
+    if (result.rows.length === 0) {
+      return res.status(401).json({message:'Invalid email or password'});
+    }
 
-//     const user = result.rows[0];
-//     const token = jwt.sign(user, 'your_jwt_secret_key', { expiresIn: '1h' });
-//     res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict' }); // secure: true only for HTTPS
-//     res.json({ message: 'Logged in successfully', user });
-//   });
-// });
+    const user = result.rows[0];
+    const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict' }); // secure: true only for HTTPS
+    res.json({ message: 'Logged in successfully', user });
+  });
+});
 
  app.post("/LoginAuth",(req,res)=>{ 
    const passwords=req.body.passwords;
    const emails=req.body.emails;
    const user={password:passwords,email:emails}
-   const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET)
+   const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,
+    {expiresIn:'30min'})
   res.json({accessToken:accessToken});
  });
 
@@ -62,14 +63,19 @@ app.post("/create-user",(req,res)=>{
   res.json(req.user)
 });
 
+app.get('/test', authenticationToken,(req, res) => {
+  console.log(req.headers['authorization'].split(' ')[1]);
+  res.send('Check console');
+});
+
  function authenticationToken(req,res,next) {
     //const authHeader=req.headers['authorization']
     const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+    const token = authHeader && authHeader.split(' ')[1];
 
-    if(token==null) return res.sendStatus(401)
+    if(token==null) return res.sendStatus(401)//No token = unauthorized
     jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
-    if(err) return res.sendStatus(403)
+    if(err) return res.sendStatus(403) //Invalid token
     req.user=user
     next();
     });
@@ -147,8 +153,8 @@ app.get("/content/:id",(req,res)=>{
   app.post("/Login",(req,res)=>{
     const   {emails,passwords} = req.body;
 
-const query = 'SELECT emails, passwords FROM public."Courseapp" WHERE emails = $1 AND passwords = $2';
-conn.query(query,[emails,passwords],(err,result)=>{
+   const query = 'SELECT emails, passwords FROM public."Courseapp" WHERE emails = $1 AND passwords = $2';
+  conn.query(query,[emails,passwords],(err,result)=>{
   if (err){
     res.status(500).send({message:"Database error",message:err});
   } else {
