@@ -10,13 +10,13 @@ POST https://exapi-gjsy.onrender.com/loginAuthe
 Content-Type: application/json
 
 {
- "passwords":"123456",
- "emails":"bazirakeric1@gmail.com"
+ "passwords":"123",
+ "emails":"eric.bazirake@abr.rw"
 }
 ###
 
-GET http://localhost:5000/test
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IjEyMzQ1NiIsImVtYWlsIjoiYmF6aXJha2VyaWMxQGdtYWlsLmNvbSIsImlhdCI6MTc1Mjk1ODA0NX0.HEXp2lvccjGRkrGPTYp-hFk5ieM0N2RLZjN35AEWtc8
+GET http://localhost:5000/protected
+
 
 
 

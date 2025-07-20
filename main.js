@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 //JSON parser middleware
 app.use(express.json());
-app.use(cookieParser());  //to parse cookies
+app.use(cookieParser());//to parse cookies
 const runningp=5000;
 app.use(cors())//Allow all origins (for development)
 app.get("/",(req,res)=>{
@@ -33,20 +33,32 @@ app.post("/create-user",(req,res)=>{
 app.post('/loginAuthe', (req, res) => {
   const { emails, passwords } = req.body;
 
-  const query = 'SELECT id, fname, emails FROM public."Courseapp" WHERE emails=$1 AND passwords=$2';
+  const query = 'SELECT id,fname, emails FROM public."Courseapp" WHERE emails=$1 AND passwords=$2';
   conn.query(query, [emails, passwords], (err, result) => {
-    if (err) {
-      return res.status(500).json({message:'Database error'});
+    if(err){
+       return res.status(500).json({message:'Database error'});
     }
 
-    if (result.rows.length === 0) {
-      return res.status(401).json({message:'email or password is incorrect'});
+    if(result.rows.length===0){
+       return res.status(401).json({message:'Email or Password is incorrect'});
     }
 
     const user = result.rows[0];
-    const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict' }); // secure: true only for HTTPS
+    const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1h'});
+    res.cookie('token',token,{httpOnly: true, secure: true, sameSite: 'Strict'}); // secure: true only for HTTPS
     res.json({ message: 'Logged in successfully', user });
+  });
+});
+
+app.get('/protected', (req, res) => {
+  const token = req.cookies.token; // <--- This is how you access it
+  if (!token) return res.sendStatus(401);
+
+  // Verify token
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    res.send(`Welcome, ${user.email}`);
   });
 });
 
@@ -59,14 +71,11 @@ app.post('/loginAuthe', (req, res) => {
   res.json({accessToken:accessToken});
  });
 
-  app.get('/protected', authenticationToken,(req, res) => {
-  res.json(req.user)
-});
+  app.get('/protected', authenticationToken,(req,res) =>{
+   res.json(req.user)
+  });
 
-app.get('/test', authenticationToken,(req, res) => {
-  console.log(req.headers['authorization'].split(' ')[1]);
-  res.send('Check console');
-});
+
 
  function authenticationToken(req,res,next) {
     //const authHeader=req.headers['authorization']
