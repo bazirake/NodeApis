@@ -50,7 +50,7 @@ app.post("/create-user",(req,res)=>{
 //   });
 // });
 
- app.post("/LoginAuth",(req,res)=>{
+ app.post("/LoginAuth",(req,res)=>{ 
    const passwords=req.body.passwords;
    const emails=req.body.emails;
    const user={password:passwords,email:emails}
@@ -58,13 +58,14 @@ app.post("/create-user",(req,res)=>{
   res.json({accessToken:accessToken});
  });
 
-  app.get('/protected', authenticationToken, (req, res) => {
+  app.get('/protected', authenticationToken,(req, res) => {
   res.json(req.user)
 });
 
  function authenticationToken(req,res,next) {
     //const authHeader=req.headers['authorization']
-    const  token =req.headers['authorization'].split(' ')[1];
+    const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
     if(token==null) return res.sendStatus(401)
     jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
