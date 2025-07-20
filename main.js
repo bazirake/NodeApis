@@ -44,7 +44,7 @@ app.post('/loginAuthe', (req, res) => {
     }
 
     const user = result.rows[0];
-    const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1h'});
+    const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'5min'});
     res.cookie('token',token,{httpOnly: true, secure: true, sameSite: 'Strict'}); // secure: true only for HTTPS
     res.json({ message: 'Logged in successfully', user });
   });
