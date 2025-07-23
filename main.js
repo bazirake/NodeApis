@@ -33,7 +33,7 @@ app.post("/create-user",(req,res)=>{
 app.post('/loginAuthe', (req, res) => {
   const { emails, passwords } = req.body;
 
-  const query = 'SELECT id,cateid,contid,fname, emails,usertype,country FROM public."Courseapp" WHERE emails=$1 AND passwords=$2';
+  const query = 'SELECT id,cateid,contid,fname, emails,usertype,country FROM public."Courseapp" WHERE emails=$1 AND passwords=$2 order by id desc';
   conn.query(query,[emails, passwords],(err, result)=>{
     if(err){
        return res.status(500).json({message:'Database error'});
