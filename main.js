@@ -42,19 +42,23 @@ app.post('/loginAuthe', (req, res) => {
     if(result.rows.length===0){
        return res.status(401).json({message:'Email or Password is incorrect'});
     }
-
+    
     const user=result.rows[0];
-    const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'5min'});
-    res.cookie('token',token,{httpOnly: true, secure: true, sameSite: 'Strict'}); // secure: true only for HTTPS
+    const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'30min'});
+    res.cookie('token',token,
+      {
+        httpOnly: true,
+         secure: true, 
+        sameSite:'Lax'});//secure:true only for HTTPS
     res.json({message:'Logged in successfully',user});
   });
 });
 
-app.post('/logout', (req, res) => {
-  res.clearCookie('token', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'Strict'
+app.post('/logout',(req, res) =>{
+    res.clearCookie('token',{
+    httpOnly:true,
+    secure:true,
+    sameSite:'Lax'
   });
   res.json({ message:'Logged out successfully'});
 });
@@ -141,9 +145,8 @@ app.get("/contentAuth", (req, res) => {
   if (!token) return res.sendStatus(401); // No token = Unauthorized
 
   // Verify token
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
     if (err) return res.sendStatus(403); // Invalid/expired token = Forbidden
-
     // SQL query to get course content
     const content = 'SELECT title, subtitle, content, subcontent, id, cid FROM public.course';
 
@@ -175,10 +178,10 @@ app.get("/content/:id",(req,res)=>{
 
 
 app.get("/contentAuth/:id", (req, res) => {
-  const id = req.params.id;
-  const token = req.cookies.token; // Get token from HTTP-only cookie
+  const id=req.params.id;
+  const token=req.cookies.token; // Get token from HTTP-only cookie
 
-  if (!token) return res.sendStatus(401); // Unauthorized (No token)
+  if(!token) return res.sendStatus(401); // Unauthorized (No token)
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err, user) => {
     if (err) return res.sendStatus(403); // Forbidden (Invalid/expired token)
@@ -186,18 +189,16 @@ app.get("/contentAuth/:id", (req, res) => {
     const contentQuery = `
       SELECT title, subtitle, content, subcontent, id, cid, image 
       FROM public.course 
-      WHERE cid = $1
-    `;
-
-    conn.query(contentQuery, [id],(err, result) =>{
+      WHERE cid = $1 `;
+    conn.query(contentQuery, [id],(err, result)=>{
       if (err) {
         console.error("Database error:", err);
         return res.status(500).send("Database error: " + err);
       }
 
       res.json({
-        userinfo:user, // Decoded user from JWT
-        resultss:result.rows   // Matching course content
+        userinfo:user,// Decoded user from JWT
+        resultss:result.rows// Matching course content
       });
     });
   });
@@ -231,17 +232,18 @@ app.get("/contentAuth/:id", (req, res) => {
   });
 
   app.post("/Login",(req,res)=>{
-    const   {emails,passwords} = req.body;
+    const {emails,passwords}=req.body;
 
    const query = 'SELECT emails, passwords FROM public."Courseapp" WHERE emails = $1 AND passwords = $2';
-  conn.query(query,[emails,passwords],(err,result)=>{
-  if (err){
-    res.status(500).send({message:"Database error",message:err});
-  } else {
-    if (result.rows.length > 0) {
+    conn.query(query,[emails,passwords],(err,result)=>{
+    if(err){
+     res.status(500).send({message:"Database error",message:err});
+   }else {
+    if(result.rows.length > 0) {
       res.send({message:"Login successful"});
-    } else{
-      res.status(401).send({ message:"email or password does not match"});
+    }
+    else{
+      res.status(401).send({message:"email or password does not match"});
     }
   }
 });

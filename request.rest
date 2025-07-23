@@ -1,12 +1,11 @@
 
 
 
-GET https://exapi-gjsy.onrender.com/protected
+GET http://localhost:5000/protected
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IjEyMzQ1NiIsImVtYWlsIjoiYmF6aXJha2VyaWMxQGdtYWlsLmNvbSIsImlhdCI6MTc1Mjk1ODA0NX0.HEXp2lvccjGRkrGPTYp-hFk5ieM0N2RLZjN35AEWtc8
 ###
 
-
-POST https://exapi-gjsy.onrender.com/loginAuthe
+POST http://localhost:5000/loginAuthe
 Content-Type: application/json
 
 {
@@ -16,7 +15,7 @@ Content-Type: application/json
 
 ###
 
-GET https://exapi-gjsy.onrender.com/protected
+GET GET http://localhost:5000/protected
 
 ###
 GET https://exapi-gjsy.onrender.com/content
