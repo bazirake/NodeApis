@@ -49,7 +49,7 @@ app.post('/loginAuthe', (req, res) => {
       {
         httpOnly: true,
          secure: true, 
-        sameSite:'Lax'});//secure:true only for HTTPS
+        sameSite:true});//secure:true only for HTTPS
     res.json({message:'Logged in successfully',user});
   });
 });
@@ -58,7 +58,7 @@ app.post('/logout',(req, res) =>{
     res.clearCookie('token',{
     httpOnly:true,
     secure:true,
-    sameSite:'Lax'
+    sameSite:true
   });
   res.json({ message:'Logged out successfully'});
 });
@@ -69,7 +69,7 @@ app.get('/protected',(req,res) => {
 
   // Verify token
   jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
+    if(err) return res.sendStatus(403);
     req.user = user;
     res.send(user);
   });
@@ -139,11 +139,9 @@ app.get("/content",(req,res)=>{
   });
   });
 
-app.get("/contentAuth", (req, res) => {
+app.get("/ ", (req, res) => {
   const token = req.cookies.token; // Get token from HTTP-only cookie
-
-  if (!token) return res.sendStatus(401); // No token = Unauthorized
-
+  if(!token) return res.sendStatus(401); // No token = Unauthorized
   // Verify token
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
     if (err) return res.sendStatus(403); // Invalid/expired token = Forbidden
@@ -156,8 +154,8 @@ app.get("/contentAuth", (req, res) => {
       } else {
         const resultss = result.rows;
         res.json({
-          userinfo: user,      // user info from token
-          resultss: resultss   // course data from DB
+          userinfo: user,  // user info from token
+          resultss: resultss // course data from DB
         });
       }
     });
@@ -346,7 +344,6 @@ app.get("/get-contact",(req,res)=>{
  });
   }
 );
-
 
  const PORT=runningp;
    app.listen(PORT,()=>{
