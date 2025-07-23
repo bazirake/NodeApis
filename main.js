@@ -47,14 +47,18 @@ app.post('/loginAuthe', (req, res) => {
     const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'30min'});
     res.cookie('token',token,
       {
-        httpOnly: true});//secure:true only for HTTPS
+        httpOnly: true,
+         secure: true, 
+        sameSite:false});//secure:true only for HTTPS
     res.json({message:'Logged in successfully',user});
   });
 });
 
 app.post('/logout',(req, res) =>{
     res.clearCookie('token',{
-    httpOnly:true
+    httpOnly:true,
+    secure:true,
+    sameSite:false
   });
   res.json({ message:'Logged out successfully'});
 });
