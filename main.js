@@ -33,7 +33,7 @@ app.post("/create-user",(req,res)=>{
 app.post('/loginAuthe', (req, res) => {
   const { emails, passwords } = req.body;
 
-  const query = 'SELECT id,fname, emails,usertype,country FROM public."Courseapp" WHERE emails=$1 AND passwords=$2';
+  const query = 'SELECT id,cateid,contid,fname, emails,usertype,country FROM public."Courseapp" WHERE emails=$1 AND passwords=$2';
   conn.query(query,[emails, passwords],(err, result)=>{
     if(err){
        return res.status(500).json({message:'Database error'});
@@ -47,9 +47,10 @@ app.post('/loginAuthe', (req, res) => {
     const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'30min'});
     res.cookie('token',token,
       {
-        httpOnly: true,
-         secure: true, 
-        sameSite:false});//secure:true only for HTTPS
+         httpOnly:true,
+         secure:true, 
+         sameSite:false
+      });//secure:true only for HTTPS
     res.json({message:'Logged in successfully',user});
   });
 });
@@ -139,7 +140,7 @@ app.get("/content",(req,res)=>{
   });
   });
 
-app.get("/ ", (req, res) => {
+app.get("/ ",(req, res)=>{
   const token = req.cookies.token; // Get token from HTTP-only cookie
   if(!token) return res.sendStatus(401); // No token = Unauthorized
   // Verify token
