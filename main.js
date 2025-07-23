@@ -47,18 +47,14 @@ app.post('/loginAuthe', (req, res) => {
     const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'30min'});
     res.cookie('token',token,
       {
-        httpOnly: true,
-         secure: true, 
-        sameSite:true});//secure:true only for HTTPS
+        httpOnly: true});//secure:true only for HTTPS
     res.json({message:'Logged in successfully',user});
   });
 });
 
 app.post('/logout',(req, res) =>{
     res.clearCookie('token',{
-    httpOnly:true,
-    secure:true,
-    sameSite:true
+    httpOnly:true
   });
   res.json({ message:'Logged out successfully'});
 });
@@ -181,10 +177,10 @@ app.get("/contentAuth/:id", (req, res) => {
 
   if(!token) return res.sendStatus(401); // Unauthorized (No token)
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err, user) => {
-    if (err) return res.sendStatus(403); // Forbidden (Invalid/expired token)
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,user) => {
+     if(err) return res.sendStatus(403); // Forbidden (Invalid/expired token)
 
-    const contentQuery = `
+     const contentQuery = `
       SELECT title, subtitle, content, subcontent, id, cid, image 
       FROM public.course 
       WHERE cid = $1 `;
@@ -327,7 +323,6 @@ app.get("/get-contact",(req,res)=>{
   const token = req.cookies.token; // Get token from HTTP-only cookie
 
   if (!token) return res.sendStatus(401); // Unauthorized (No token)
-
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err, user) => {
     if (err) return res.sendStatus(403); // Forbidden (Invalid/expired token)
    const sqld='SELECT title,subtitle,content,subcontent,id,cid FROM public.course where id=$1 and cid=$2';
