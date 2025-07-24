@@ -10,20 +10,7 @@ const cookieParser = require('cookie-parser');
 app.use(express.json());
 app.use(cookieParser());//to parse cookies
 const runningp=5000;
-app.use(cors(
-  {
-    origin:function(origin,callback) {
-      const allowedOrigins=['http://localhost:3000','https://etech-kappa.vercel.app','http://localhost:5000']
-      if (allowedOrigins.includes(origin)) {
-         callback(null,true);        
-      }
-      else{
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials:true
-  }
-))//Allow all origins (for development)
+app.use(cors())//Allow all origins (for development)
 app.get("/",(req,res)=>{
      res.send("Node js api Serv");
  });
