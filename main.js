@@ -10,7 +10,8 @@ const cookieParser = require('cookie-parser');
 app.use(express.json());
 app.use(cookieParser());//to parse cookies
 const runningp=5000;
-app.use(cors())//Allow all origins (for development)
+//app.use(cors())//Allow all origins (for development)
+
 app.get("/",(req,res)=>{
      res.send("Node js api Serv");
  });
