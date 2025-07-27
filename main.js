@@ -55,7 +55,7 @@ app.post('/loginAuthe', (req, res) => {
       {
          httpOnly:true,
          secure:true, 
-         sameSite:true
+         sameSite:"None"// allow cross site request
       });//secure:true only for HTTPS
     res.json({message:'Logged in successfully',user});
   });
@@ -65,7 +65,7 @@ app.post('/logout',(req, res) =>{
     res.clearCookie('token',{
     httpOnly:true,
     secure:true,
-    sameSite:false
+    sameSite:"None"
   });
   res.json({ message:'Logged out successfully'});
 });
@@ -151,7 +151,7 @@ app.get("/ ",(req, res)=>{
   if(!token) return res.sendStatus(401); // No token = Unauthorized
   // Verify token
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
-    if (err) return res.sendStatus(403); // Invalid/expired token = Forbidden
+    if (err) return res.sendStatus(403);// Invalid/expired token = Forbidden
     // SQL query to get course content
     const content = 'SELECT title, subtitle, content, subcontent, id, cid FROM public.course';
 
