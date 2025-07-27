@@ -61,7 +61,7 @@ app.post('/loginAuthe', (req, res) => {
   });
 });
 
-app.post('/logout',(req, res) =>{
+app.get('/logout',(req, res) =>{
     res.clearCookie('token',{
     httpOnly:true,
     secure:true,
