@@ -12,7 +12,7 @@ app.use(cookieParser());//to parse cookies
 const runningp=5000;
 app.use(cors(
 {
-  origin:"http://localhost:3000",
+  origin:['http://localhost:3000','https://etech-kappa.vercel.app'],
   credentials:true
 }
 ))//Allow all origins (for development)
@@ -75,7 +75,7 @@ app.get('/getinfo',(req,res) => {
   if (!token) return res.sendStatus(401);
 
   // Verify token
-  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, (err, user) =>{
+  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err, user) =>{
     if(err) return res.sendStatus(403);
     req.user = user;
     res.send(user);
@@ -200,7 +200,6 @@ app.get("/contentAuth/:id", (req, res) => {
         console.error("Database error:", err);
         return res.status(500).send("Database error: " + err);
       }
-
       res.json({
         userinfo:user,// Decoded user from JWT
         resultss:result.rows// Matching course content
@@ -253,7 +252,6 @@ app.get("/contentAuth/:id", (req, res) => {
   }
 });
   });
-
 
 app.get("/student-course",(req,res)=>{
     const stcourse='SELECT id, fname, email, tel, country, terms, cid, conid FROM public.student';

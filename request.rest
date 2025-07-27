@@ -16,7 +16,7 @@ Content-Type: application/json
 
 ###
 
-GET https://exapi-gjsy.onrender.com/protected
+GET https://exapi-gjsy.onrender.com/getinfo
 
 ###
 GET http://localhost:5000/content
