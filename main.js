@@ -16,7 +16,7 @@ app.use(cors(
   credentials:true
 }
 ))//Allow all origins (for development)
-
+ 
 app.get("/",(req,res)=>{
      res.send("Node js api Serv");
  });
@@ -39,7 +39,7 @@ app.post("/create-user",(req,res)=>{
 app.post('/loginAuthe', (req, res) => {
   const { emails, passwords } = req.body;
 
-  const query = 'SELECT id,cateid,contid,fname, emails,usertype,country FROM public."Courseapp" WHERE emails=$1 AND passwords=$2 order by id desc';
+  const query = 'SELECT id,cateid,contid,fname,emails,usertype,country FROM public."Courseapp" WHERE emails=$1 AND passwords=$2 order by id desc';
   conn.query(query,[emails, passwords],(err, result)=>{
     if(err){
        return res.status(500).json({message:'Database error'});
@@ -70,12 +70,12 @@ app.post('/logout',(req, res) =>{
   res.json({ message:'Logged out successfully'});
 });
 
-app.get('/protected',(req,res) => {
-  const token = req.cookies.token; // <--- This is how you access it
+app.get('/getinfo',(req,res) => {
+  const token = req.cookies.token; //<--- This is how you access it
   if (!token) return res.sendStatus(401);
 
   // Verify token
-  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, (err, user) =>{
     if(err) return res.sendStatus(403);
     req.user = user;
     res.send(user);
