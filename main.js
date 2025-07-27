@@ -55,7 +55,7 @@ app.post('/loginAuthe', (req, res) => {
       {
          httpOnly:true,
          secure:true, 
-         sameSite:false
+         sameSite:true
       });//secure:true only for HTTPS
     res.json({message:'Logged in successfully',user});
   });
