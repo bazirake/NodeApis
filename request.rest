@@ -18,14 +18,6 @@ Content-Type: application/json
 
 GET https://exapi-gjsy.onrender.com/getinfo
 
+
 ###
-GET http://localhost:5000/content
-
-
-
-
-
-
-
-
-
+GET http://localhost:5000/getusercourse/eric.bazirake@abr.rw

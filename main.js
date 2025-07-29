@@ -191,7 +191,7 @@ app.get("/contentAuth/:id", (req, res) => {
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,user) => {
      if(err) return res.sendStatus(403); // Forbidden (Invalid/expired token)
 
-     const contentQuery = `
+     const contentQuery =`
       SELECT title, subtitle, content, subcontent, id, cid, image 
       FROM public.course 
       WHERE cid = $1 `;
@@ -234,6 +234,25 @@ app.get("/contentAuth/:id", (req, res) => {
      }
    });  
   });
+
+   app.get("/getusercourse/:email",(req,res)=>{
+     const email=req.params.email;
+     const token=req.cookies.token; // Get token from HTTP-only cookie
+     if(!token) return res.sendStatus(401); // Unauthorized (No token)
+     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,user) => {
+     if(err) return res.sendStatus(403);//Forbidden (Invalid/expired token)
+     const query='SELECT * FROM public."Courseapp" cc INNER JOIN public.course BB ON cc.contid::bigint=BB.id WHERE cc.emails=$1';
+     conn.query(query,[email],(err,result)=>{
+        if(err){
+          res.status(500).send({message:err});
+        }
+        else{
+          res.status(200).send(result.rows);
+        }
+     })
+   }
+  )
+   });
 
   app.post("/Login",(req,res)=>{
     const {emails,passwords}=req.body;
