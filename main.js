@@ -188,21 +188,21 @@ app.get("/contentAuth/:id", (req, res) => {
 
   if(!token) return res.sendStatus(401); // Unauthorized (No token)
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,user) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
      if(err) return res.sendStatus(403); // Forbidden (Invalid/expired token)
 
      const contentQuery =`
-      SELECT title, subtitle, content, subcontent, id, cid, image 
+      SELECT title, subtitle,content, subcontent, id, cid, image 
       FROM public.course 
-      WHERE cid = $1 `;
+      WHERE cid =$1 `;
     conn.query(contentQuery, [id],(err, result)=>{
       if (err) {
         console.error("Database error:", err);
         return res.status(500).send("Database error: " + err);
       }
       res.json({
-        userinfo:user,// Decoded user from JWT
-        resultss:result.rows// Matching course content
+        userinfo:user,//Decoded user from JWT
+        resultss:result.rows//Matching course content
       });
     });
   });
@@ -233,6 +233,29 @@ app.get("/contentAuth/:id", (req, res) => {
       res.send({message:"Course applied successfully"});
      }
    });  
+  });
+
+  app.post("/updateuser",(req,res)=>{
+     const {emails,tel,country,usertype,fname}=req.body;
+
+
+     const token=req.cookies.token; // Get token from HTTP-only cookie
+     if(!token) return res.sendStatus(401); // Unauthorized (No token)
+     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,user) => {
+     if(err) return res.sendStatus(403);//Forbidden (Invalid/expired token)
+const query='UPDATE public."Courseapp" SET  usertype=$4, fname=$5, tel=$2, country=$3 WHERE emails=$1';
+    conn.query(query,[emails,tel,country,usertype,fname],(err,result)=>{
+      if (err){
+        res.send({message:err});
+      } else {
+        res.json({message:"Profile updated successfully"});
+      }
+    });
+
+     }
+    );
+
+   
   });
 
    app.get("/getusercourse/:email",(req,res)=>{

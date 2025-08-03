@@ -6,12 +6,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IjEyM
 ###
  
 
-POST https://exapi-gjsy.onrender.com/loginAuthe
+POST http://localhost:5000/updateuser
 Content-Type: application/json
 
 {
-  "passwords":"123",
-  "emails":"eric.bazirake@abr.rw"
+"emails":"eric.bazirake@abr.rw",
+"tel":"767677",
+"country":"Rwanda",
+"usertype":"dfdfdfd",
+"fname":"dfdffgfgfgfgf"
 }
 
 ###
