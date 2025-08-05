@@ -400,13 +400,13 @@ app.post('/sendemail', async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
     auth:{
-      user:'bazirakeric1@gmail.com',
-      pass:'nmbyzoqnnrniaytn',
+      user:'extechltd2025@gmail.com',
+      pass:'wfykkpgjrzkophgc',
     },
   });
 
   try {
-    await transporter.sendMail({ from: 'yumvaelipa98@gmail.com', to, subject, text });
+    await transporter.sendMail({ from:'extechltd2025@gmail.com', to, subject, text });
     res.status(200).send('Email sent!');
   } catch (err) {
     console.error('Email error:', err);
