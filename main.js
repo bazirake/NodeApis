@@ -6,6 +6,7 @@ const cors=require('cors');
 const app=express();
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const   nodemailer =require ('nodemailer');
 //JSON parser middleware
 app.use(express.json());
 app.use(cookieParser());//to parse cookies
@@ -390,6 +391,27 @@ app.get("/get-contact",(req,res)=>{
  });
   }
 );
+
+
+
+app.post('/sendemail', async (req, res) => {
+  const {to,subject,text}= req.body;
+
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth:{
+      user:'bazirakeric1@gmail.com',
+      pass:'nmbyzoqnnrniaytn',
+    },
+  });
+
+  try {
+    await transporter.sendMail({ from: 'yumvaelipa98@gmail.com', to, subject, text });
+    res.status(200).send('Email sent!');
+  } catch (err) {
+    console.error('Email error:', err);
+  }
+});
 
  const PORT=runningp;
    app.listen(PORT,()=>{

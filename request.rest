@@ -18,6 +18,15 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:5000/sendemail
+Content-Type: application/json
+
+{
+  "to":"yumvaelipa98@gmail.com",
+  "subject":"extech test",
+  "text":"password link reset"
+}
+### 
 
 GET https://exapi-gjsy.onrender.com/getinfo
 
