@@ -2,6 +2,7 @@
 const express=require("express");
 const getConnection=require("./db_config");
 require("dotenv").config();
+const axios = require("axios");
 const cors=require('cors');
 const app=express();
 const jwt = require('jsonwebtoken');
@@ -393,25 +394,41 @@ app.get("/get-contact",(req,res)=>{
 );
 
 
+// Create Nodemailer transporter using AWS SES SMTP
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure:false, // true for 465, false for 587
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+  connectionTimeout: 10000 // 10 seconds
+});
 
-app.post('/sendemail', async (req, res) => {
-  const {to,subject,text}= req.body;
-
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth:{
-      user:'extechltd2025@gmail.com',
-      pass:'wfykkpgjrzkophgc',
-    },
-  });
-
+// Create Nodemailer transporter using AWS SES SMTP
+app.post("/send-email", async (req, res) => {
+  const { to, subject, text, html } = req.body;
   try {
-    await transporter.sendMail({ from:'extechltd2025@gmail.com', to, subject, text });
-    res.status(200).send('Email sent!');
-  } catch (err) {
-    console.error('Email error:', err);
+    const info = await transporter.sendMail({
+      from: process.env.FROM_EMAIL,
+      to,
+      subject,
+      text,
+      html,
+    });
+
+    console.log("Message sent:", info.messageId);
+    res.json({ message: "Email sent successfully", id: info.messageId });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
   }
 });
+
+
+
+
 
  const PORT=runningp;
    app.listen(PORT,()=>{

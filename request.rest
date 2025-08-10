@@ -18,14 +18,18 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:5000/sendemail
+
+POST http://localhost:5000/send-email
 Content-Type: application/json
 
 {
-  "to":"yumvaelipa98@gmail.com",
-  "subject":"extech test",
-  "text":"password link reset"
+  "to": "ericsbazirake@gmail.com",
+  "subject": "Test Email from AWS",
+  "text": "Hello, this is a test email!",
+  "html": "<h1>Hello!</h1><p>This is a test email.</p>"
 }
+
+
 ### 
 
 GET https://exapi-gjsy.onrender.com/getinfo
