@@ -411,7 +411,7 @@ app.post("/send-email", async (req, res) => {
   const {to, subject, text}=req.body;
   try {
     const info = await transporter.sendMail({
-      from: process.env.FROM_EMAIL,
+      from:process.env.FROM_EMAIL,
       to,
       subject,
       text:text  // fallback to body if text is not provided
@@ -425,6 +425,41 @@ app.post("/send-email", async (req, res) => {
     res.status(500).json({ error: "Failed to send email" });
   }
 });
+
+
+app.post("/forgot-password", async (req, res) => {
+  const {email} =req.body;
+  
+  const query ='SELECT id,cateid,contid,fname,emails,usertype,country FROM public."Courseapp" WHERE emails=$1';
+  conn.query(query,[email],(err, result)=>{
+    if(err){
+       return res.status(500).json({message:'Database error'});
+    }
+
+    else if(result.rows.length===0){
+       return res.status(401).json({message:'User not found'});
+    }
+
+   const user=result.rows[0];
+    resetToken=jwt.sign({id:user.id},process.env.ACCESS_TOKEN_SECRET,{expiresIn:'15min'});
+   // res.json(user.emails);
+     const resetLink = `http://localhost:5000/reset-password/${resetToken}`;
+
+     transporter.sendMail({
+    from:process.env.FROM_EMAIL,
+    to:user.emails,
+    subject: "Password Reset Request",
+    html: `<p>Click here to reset your password:This link valid only 15 min</p><a href="${resetLink}">${resetLink}</a>`,
+  });
+
+  res.json({messa:"Password reset link sent to email"});
+  });
+
+
+ 
+//  res.send(email);
+});
+
 
 
 
