@@ -408,14 +408,14 @@ const transporter = nodemailer.createTransport({
 
 // Create Nodemailer transporter using AWS SES SMTP
 app.post("/send-email", async (req, res) => {
-  const {to, subject, text}=req.body;
+  const {to, subject, text, html, body}=req.body;
   try {
     const info = await transporter.sendMail({
       from: process.env.FROM_EMAIL,
       to,
       subject,
-      text:text    // fallback to body if text is not provided
-     // also add HTML for Gmail rendering
+      text: text || body,   // fallback to body if text is not provided
+       html: `<p>${text || body}</p>` // also add HTML for Gmail rendering
     });
 
     console.log("Message sent:", info.messageId);
