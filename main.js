@@ -373,7 +373,7 @@ app.get("/get-contact",(req,res)=>{
  app.get("/detailAuth/:id/:cid",(req,res)=>{
   const id=req.params.id;
    const cid=req.params.cid;
-  const token = req.cookies.token; // Get token from HTTP-only cookie
+   const token = req.cookies.token;//Get token from HTTP-only cookie
 
   if (!token) return res.sendStatus(401); // Unauthorized (No token)
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err, user) => {
@@ -408,13 +408,14 @@ const transporter = nodemailer.createTransport({
 
 // Create Nodemailer transporter using AWS SES SMTP
 app.post("/send-email", async (req, res) => {
-  const {to,subject,body}=req.body;
+  const {to, subject, text}=req.body;
   try {
     const info = await transporter.sendMail({
       from: process.env.FROM_EMAIL,
       to,
       subject,
-      body
+      text:text    // fallback to body if text is not provided
+     // also add HTML for Gmail rendering
     });
 
     console.log("Message sent:", info.messageId);

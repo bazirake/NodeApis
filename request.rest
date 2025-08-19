@@ -19,14 +19,13 @@ Content-Type: application/json
 
 ###
 
-POST https://exapi-gjsy.onrender.com/send-email
+POST http://localhost:5000/send-email
 Content-Type: application/json
 
 {
   "to": "bazirakeric1@gmail.com",
-  "subject": "Test Email from AWS",
-  "text": "Hello, this is a test email!",
-  "html": "<h1>Hello!</h1><p>This is a test email.</p>"
+  "subject": "Test Email",
+  "text":"welcomexx"
 }
 
 
