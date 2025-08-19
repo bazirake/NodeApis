@@ -25,9 +25,8 @@ Content-Type: application/json
 {
   "to": "bazirakeric1@gmail.com",
   "subject": "Test Email",
-  "text":"welcomexx",
-  "html":"<h2>Hello</h2><p>This is a <b>test</b> email.</p>",
-   "body":"hghghghghgh"
+  "text":"welcomexx"
+
 }
 
 
