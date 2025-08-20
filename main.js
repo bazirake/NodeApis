@@ -438,17 +438,17 @@ app.post("/forgot-password", async (req, res) => {
 
     else if(result.rows.length===0){
        return res.status(401).json({message:'User not found'});
-    }
+    }  
 
    const user=result.rows[0];
     resetToken=jwt.sign({id:user.id},process.env.ACCESS_TOKEN_SECRET,{expiresIn:'15min'});
    // res.json(user.emails);
-     const resetLink = `http://localhost:5000/reset-password/${resetToken}`;
+     const resetLink = `http://etech-kappa.vercel.app/reset-password/${resetToken}`;
 
      transporter.sendMail({
     from:process.env.FROM_EMAIL,
     to:user.emails,
-    subject: "Password Reset Request",
+    subject: "Extech Password Reset Request",
     html: `<p>Click here to reset your password:This link valid only 15 min</p><a href="${resetLink}">${resetLink}</a>`,
   });
 
