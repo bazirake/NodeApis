@@ -28,7 +28,7 @@ Content-Type: application/json
 
 
 ### 
-GET https://exapi-gjsy.onrender.com/getinfo
+GET https://exapi-gjsy.onrender.com/get-contact
 
 
 ###

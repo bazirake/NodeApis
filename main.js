@@ -384,8 +384,8 @@ app.get("/get-contact",(req,res)=>{
       res.send({errmess:err});
     }else{
       res.json({
-        userinfo:user, // Decoded user from JWT
-        resultss:result.rows   // Matching course content
+        userinfo:user,//Decoded user from JWT
+        resultss:result.rows //Matching course content
       });
     }
  });
@@ -458,6 +458,46 @@ app.post("/forgot-password", async (req, res) => {
 
  
 //  res.send(email);
+});
+
+
+//reset password
+// Reset password endpoint
+app.post("/reset-password/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    // Verify the token
+    let decoded;
+    try {
+      decoded = jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
+    } catch (err) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    const userEmail = decoded.email; // email encoded when token was generated
+
+    // Hash the new password
+    //const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update password in DB
+    const query = `UPDATE public."Courseapp" SET passwords = $1 WHERE emails = $2`;
+    conn.query(query, [password, userEmail], (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Database error", error: err });
+      }
+
+      if(result.rowCount > 0){
+        res.json({ message: "Password has been reset successfully" });
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 
