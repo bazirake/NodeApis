@@ -462,7 +462,6 @@ app.post("/forgot-password", async (req, res) => {
 
 
 //reset password
-import bcrypt from "bcrypt";
 
 app.post("/reset-password/:token", async (req, res) => {
   try {
