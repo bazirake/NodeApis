@@ -465,7 +465,7 @@ app.post("/forgot-password", async (req, res) => {
 
 app.post("/reset-password/:token", async (req, res) => {
   try {
-    const { token } = req.params;
+    const token= req.params.token;
     const { password } = req.body;
 
     // Verify the token
