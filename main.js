@@ -468,12 +468,12 @@ app.post("/reset-password/:token", async (req, res) => {
     const {token}=req.params;
     const {password}=req.body;
 
-    // Verify the token
+    //Verify the token
     let decoded;
     try {
       decoded = jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
     } catch (err) {
-      return res.status(400).json({ message: "Invalid or expired link" });
+      return res.status(400).json({message:"Invalid or expired link"});
     }
 
     const userEmail = decoded.email; // email encoded when token was generated
@@ -482,18 +482,19 @@ app.post("/reset-password/:token", async (req, res) => {
     //const hashedPassword = await bcrypt.hash(password, 10);
 
     // Update password in DB
-    const query = `UPDATE public."Courseapp" SET passwords = $1 WHERE emails = $2`;
-    conn.query(query, [password, userEmail], (err, result) => {
-      if (err) {
-        return res.status(500).json({ message: "Database error", error: err });
-      }
+    // const query = `UPDATE public."Courseapp" SET passwords = $1 WHERE emails = $2`;
+    // conn.query(query, [password, userEmail], (err, result) => {
+    //   if (err) {
+    //     return res.status(500).json({ message: "Database error", error: err });
+    //   }
 
-      if(result.rowCount > 0){
-        res.json({ message: "Password has been reset successfully" });
-      } else {
-        res.status(404).json({ message: "User not found" });
-      }
-    });
+    //   if(result.rowCount > 0){
+    //     res.json({ message: "Password has been reset successfully" });
+    //   } else {
+    //     res.status(404).json({ message: "User not found" });
+    //   }
+    // });
+    res.json({ message:userEmail});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
