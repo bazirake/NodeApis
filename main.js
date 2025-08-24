@@ -465,15 +465,15 @@ app.post("/forgot-password", async (req, res) => {
 // Reset password endpoint
 app.post("/reset-password/:token", async (req, res) => {
   try {
-    const { token } = req.params;
-    const { password } = req.body;
+    const {token}=req.params;
+    const {password}=req.body;
 
     // Verify the token
     let decoded;
     try {
       decoded = jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
     } catch (err) {
-      return res.status(400).json({ message: "Invalid or expired token" });
+      return res.status(400).json({ message: "Invalid or expired link" });
     }
 
     const userEmail = decoded.email; // email encoded when token was generated
