@@ -476,13 +476,10 @@ app.post("/reset-password/:token", async (req, res) => {
       return res.status(400).json({message: "Invalid or expired link" });
     }
 
-    const userEmail = decoded.id; // Email from token
-
-
-
+    const id = decoded.id; // Email from token
     // Update password in DB
-    const query = `UPDATE public."Courseapp" SET passwords = $1 WHERE emails = $2`;
-    conn.query(query, [password, userEmail], (err, result) => {
+    const query = `UPDATE public."Courseapp" SET passwords = $1 WHERE id= $2`;
+    conn.query(query, [password, id], (err, result) => {
       if (err) {
         return res.status(500).json({ message:"Database error", error: err});
       }
@@ -490,7 +487,7 @@ app.post("/reset-password/:token", async (req, res) => {
       if (result.rowCount > 0){
         res.json({ message: "Password has been reset successfully" });
       } else{
-        res.status(404).json({ message: "User not found",email:userEmail});
+        res.status(404).json({ message: "User not found"});
       }
     });
 
