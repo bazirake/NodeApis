@@ -476,7 +476,7 @@ app.post("/reset-password/:token", async (req, res) => {
       return res.status(400).json({message: "Invalid or expired link" });
     }
 
-    const userEmail = decoded.emails; // Email from token
+    const userEmail = decoded.id; // Email from token
 
 
 
@@ -490,7 +490,7 @@ app.post("/reset-password/:token", async (req, res) => {
       if (result.rowCount > 0){
         res.json({ message: "Password has been reset successfully" });
       } else{
-        res.status(404).json({ message: "User not found",email:decoded.emails});
+        res.status(404).json({ message: "User not found",email:userEmail});
       }
     });
 
